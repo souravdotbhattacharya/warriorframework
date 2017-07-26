@@ -18,10 +18,10 @@
 				<div class="page" id="launchpad">
 					<div class="page-content">
 						<div class="tabs">
-							{{ apps }}
+						
 
 							{% for app in apps %}
-								<div class="tab {{ app.color }}" katana-click="templateAPI.load" url="{{ app.url }}"><i class="fa {{ app.icon }}"></i><span>{{ app.name }}</span></div>
+								<div class="tab {{ app.color }}" katana-click="templateAPI.load" url="{{ app.url }}"><i class="fa fa-{{ app.icon }}"></i><span>{{ app.name }}</span></div>
 							{% endfor %}
 						</div>
 					</div>
