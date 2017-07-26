@@ -15,55 +15,28 @@ limitations under the License.
 from __future__ import unicode_literals
 import os
 from django.shortcuts import render
-from utils.file_utils import get_sub_folders, get_abs_path
+from django.views import View
+from django.views.generic import DetailView
+
+from core.utils.core_utils import CoreIndex
 
 
-def index(request):
-    current_directory = os.path.dirname(os.path.realpath(__file__))
-    sub_dirs = get_sub_folders(os.path.dirname(current_directory))
-    installed_apps = ["core"]
-    if "apps" in sub_dirs:
-        apps_sub_dir = get_sub_folders(os.path.dirname(current_directory) + os.sep + "apps")
-        for i in range(0, len(apps_sub_dir)):
-            apps_sub_dir[i] = "apps." + apps_sub_dir[i]
-        installed_apps.extend(apps_sub_dir)
-    if "default" in sub_dirs:
-        def_sub_dir = get_sub_folders(os.path.dirname(current_directory) + os.sep + "default")
-        for i in range(0, len(def_sub_dir)):
-            def_sub_dir[i] = "default." + def_sub_dir[i]
-        installed_apps.extend(def_sub_dir)
+class CoreView(View):
 
-    setting_path = get_abs_path("../wui/settings.py", current_directory)
-    with open(setting_path, "r") as f:
-        data = f.readlines()
-    apps_list = []
-    flag = False
-    for line in data:
-        if flag and line == "]\n":
-            break
-        if flag:
-            apps_list.append(line)
-        if not flag and line.startswith("INSTALLED_APPS = ["):
-            flag = True
-    final_apps = []
-    for i in range(0, len(apps_list)):
-        apps_list[i] = apps_list[i].strip(" ")
-        apps_list[i] = apps_list[i].strip("\n")
-        apps_list[i] = apps_list[i].strip(",")
-        apps_list[i] = apps_list[i].strip("'")
-        if not apps_list[i].startswith("django."):
-            final_apps.append(apps_list[i])
+    def get(self, request):
+        template = 'core/index.html'
+        key = "app"
+        apps = {key: []}
+        app_content = {"name": "", "color": "", "url": "", "icon": ""}
+        config_file = "details.txt"
+        rel_path_settings_py = "../wui/settings.py"
+        rel_path_urls_py = "../wui/urls.py"
+        config_details_dict = {"icon": "", "color": ""}
 
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        core_index_obj = CoreIndex(current_directory, rel_path_settings_py, rel_path_urls_py, apps,
+                                   app_content, config_file, config_details_dict, key)
 
-    print installed_apps
-    print final_apps
+        apps = core_index_obj.consolidate_app_details()
 
-    apps = {"app": []}
-
-    for app1 in installed_apps:
-        for app2 in final_apps:
-            if app1 == app2:
-                apps["app"].append({"name": app1, "color": "blue", "url": "", "icon": ""})
-
-
-    return render(request, 'core/index.html', {"data": "This is the main Katana Core page"})
+        return render(request, template, {"apps": apps})
