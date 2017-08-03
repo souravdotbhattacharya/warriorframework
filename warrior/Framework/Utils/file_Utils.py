@@ -19,6 +19,7 @@ import sys
 import string
 import shutil
 import string_Utils
+import glob
 from print_Utils import print_info, print_error, print_warning, print_exception
 
 try:
@@ -1305,3 +1306,20 @@ def get_modified_files(src_dir, time_stamp, filetypes=""):
                     modified_files.append(full_path)
 
     return modified_files
+
+
+
+def get_xml_files_in_path(src_path):
+    """
+    Returns all the xml files found in a path with a glob pattern. 
+    The files returned must have an .xml extension and be valid test cases or suites. 
+    """
+    files = glob.glob(src_path)
+    rv = [ fn for fn in files if fn.find('.xml') > 0 ]
+    # Now check if the file is actually a test case?? How do we do that ??
+    # print "rv ---> ", rv 
+    return rv 
+        
+
+
+

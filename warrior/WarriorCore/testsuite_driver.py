@@ -140,7 +140,8 @@ def get_testcase_list(testsuite_filepath):
         print_info('Testsuite is empty: tag <Testcases> not found in the input Testsuite xml file ')
     else:
         testcase_list = []
-        new_testcase_list = testcases.findall('Testcase')
+        #---> new_testcase_list = testcases.findall('Testcase')
+        new_testcase_list = Utils.xml_Utils.get_expanded_file_elements(testsuite_filepath,'Testcase')
         # execute tc multiple times
         for _, tc in enumerate(new_testcase_list):
             runmode, value = common_execution_utils.get_runmode_from_xmlfile(tc)

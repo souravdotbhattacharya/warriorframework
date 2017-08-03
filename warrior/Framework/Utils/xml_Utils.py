@@ -16,6 +16,7 @@ import json
 import difflib
 import os
 import os.path
+import glob,copy
 from xml.dom import minidom
 from xml.etree import ElementTree
 from xml.etree.ElementTree import tostring
@@ -1017,3 +1018,36 @@ def safe_subelement(parent, tagname, text="", **kwargs):
         ele.text = text
         ele.attrib = kwargs
     return ele
+
+
+def get_expanded_file_elements(project_filepath): 
+    """
+    Expands all test suite objects by their glob-ed names if an asterisk is found in
+    the path name. 
+
+    """
+    project_dir = os.path.dirname(project_filepath,nodename='Testsuite') 
+    root = getRoot(project_filepath) 
+
+    testsuites = root.find(nodename+'s') 
+    t_list = testsuites.findall(nodename)
+    new_list = []
+
+    for tx in t_list:
+        txname = tx.find('path').text
+        if txname.find('*') < 0:
+            new_list.append(copy.copy(tx))
+            continue
+        xstr = os.path.dirname(tx.find('path').text)     # Get the path name 
+        dpath =  file_Utils.getAbsPath(xstr, project_dir) + '/*'  # for expansion
+        files = [ x for x in glob.glob(dpath) if x.find(".xml") > 0 ]   # Only xml files
+        for fn in files:
+            tn = copy.deepcopy(tx)
+            tn.path = fn
+            tn.find('path').text = fn
+            new_list.append(tn)
+                # print "added ...", fn,tn.path
+    # for tx in new_list: print tx,tx.find('path').text
+    return new_list
+
+

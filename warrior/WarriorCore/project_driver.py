@@ -105,7 +105,8 @@ def get_testsuite_list(project_filepath):
         print_info('Testsuite is empty: tag <Testsuites> not "\
                    "found in the input file ')
     else:
-        testsuite_list = testsuites.findall('Testsuite')
+        # testsuite_list = testsuites.findall('Testsuite')
+        testsuite_list = Utils.xml_Utils.get_expanded_file_elements(project_filepath,'Testsuite')
         for ts in testsuite_list:
             runmode, value = common_execution_utils.\
                 get_runmode_from_xmlfile(ts)
