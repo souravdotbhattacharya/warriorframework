@@ -1020,13 +1020,13 @@ def safe_subelement(parent, tagname, text="", **kwargs):
     return ele
 
 
-def get_expanded_file_elements(project_filepath): 
+def get_expanded_file_elements(project_filepath, nodename='Testsuite') : 
     """
     Expands all test suite objects by their glob-ed names if an asterisk is found in
     the path name. 
 
     """
-    project_dir = os.path.dirname(project_filepath,nodename='Testsuite') 
+    project_dir = os.path.dirname(project_filepath)
     root = getRoot(project_filepath) 
 
     testsuites = root.find(nodename+'s') 
