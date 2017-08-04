@@ -18,18 +18,19 @@ import copy
 
 class TestExpandSuites(unittest.TestCase):
     def test_project_expansion(self):
+        # TODO must use relative path names here .... 
         project_filepath = '/home/khusain/warriorframework/wftests/warrior_tests/projects/pj_glob_files.xml'
         print Utils.xml_Utils.get_expanded_file_elements(project_filepath)
         return 
 
     
     def test_suite_expansion(self):
-        # TODO must use relative path names here .... 
         dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         print dirname + "/../../wftests/warrior_tests/suites/framework_tests"
         project_filepath = '/home/khusain/warriorframework/wftests/warrior_tests/suites/framework_tests/ts_glob_files.xml'
         print Utils.xml_Utils.get_expanded_file_elements(project_filepath,'Testcase')
         return 
+
 
 
     def saveme(self):
